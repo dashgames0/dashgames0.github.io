@@ -3,51 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashGames0 | Play Free Browser Games</title>
+    <title>DashGames0 | Premium Free Arcade</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: #0b0c10; color: #fff; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: #1f2833; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: #1f2833; border-radius: 12px; margin-bottom: 25px; border: 1px solid #333; }
         .logo { font-size: 24px; font-weight: bold; color: #4630f5; text-transform: uppercase; letter-spacing: 1px; }
-        .notice-bar { background: #ff007f; color: white; text-align: center; padding: 8px; border-radius: 8px; font-weight: bold; margin-bottom: 20px; font-size: 14px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }
-        .tile { background-color: #1f2833; aspect-ratio: 1; border-radius: 12px; display: flex; align-items: flex-end; justify-content: center; padding: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; transition: transform 0.2s, border-color 0.2s; background-size: cover; background-position: center; border: 2px solid transparent; }
-        .tile:hover { transform: scale(1.05); border-color: #4630f5; box-shadow: 0 5px 15px rgba(70, 48, 245, 0.3); }
-        .tile span { background: rgba(0, 0, 0, 0.7); width: 100%; text-align: center; padding: 5px 0; border-radius: 6px; }
-        .big { grid-column: span 2; grid-row: span 2; }
+        .counter { background: #333; padding: 5px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #00ffff; }
+
+        /* Asymmetric Poki-Style Grid Layout */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }
+        
+        /* Interactive Game Tiles */
+        .tile { background-color: #1f2833; aspect-ratio: 1; border-radius: 12px; display: flex; align-items: flex-end; justify-content: center; padding: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 12px; transition: transform 0.2s, border-color 0.2s; background-size: cover; background-position: center; border: 2px solid transparent; cursor: pointer; }
+        .tile:hover { transform: scale(1.06); border-color: #4630f5; box-shadow: 0 5px 15px rgba(70, 48, 245, 0.4); }
+        .tile span { background: rgba(0, 0, 0, 0.75); width: 100%; text-align: center; padding: 5px 0; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Making random tiles larger like ZapGames / Poki Layouts */
+        .tile:nth-child(7n) { grid-column: span 2; grid-row: span 2; font-size: 15px; }
+
+        /* Full Screen Theater Overlay */
+        .theater { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 16, 0.98); z-index: 1000; flex-direction: column; }
+        .theater-header { background: #1f2833; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .close-btn { background: #ff007f; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .close-btn:hover { background: #e0006c; }
+        
+        .stage { display: flex; flex: 1; padding: 20px; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; height: calc(100vh - 80px); }
+        iframe { flex: 3; height: 100%; border: none; border-radius: 12px; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .sidebar-ad { flex: 1; background: #151515; border: 2px dashed #333; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: #555; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <!-- Backup Notice Link for your players -->
-    <div class="notice-bar">
-        If this site gets blocked, our next link is: dashgames1.github.io
-    </div>
-
     <header>
         <div class="logo">🕹️ DashGames0</div>
+        <div class="counter" id="gameCount">Loading Games...</div>
     </header>
 
-    <div class="grid">
-        <!-- BIG POKI-STYLE FEATURED TILE -->
-        <a href="https://gamedistribution.com" class="tile big" style="background-image: url('https://unsplash.com');">
-            <span>Tetris Retro</span>
-        </a>
+    <!-- Main Dynamic Target Grid -->
+    <div class="grid" id="arcadeGrid"></div>
 
-        <!-- STANDARD TILES (Pointing directly to full-screen games) -->
-        <a href="https://gamedistribution.com" class="tile" style="background-image: url('https://unsplash.com');">
-            <span>Space Orbit</span>
-        </a>
-        <a href="https://gamedistribution.com" class="tile" style="background-image: url('https://unsplash.com');">
-            <span>Block Collapse</span>
-        </a>
-        <a href="https://gamedistribution.com" class="tile" style="background-image: url('https://unsplash.com');">
-            <span>Cyber Gunner</span>
-        </a>
-        <a href="https://gamedistribution.com" class="tile" style="background-image: url('https://unsplash.com');">
-            <span>Runner 3D</span>
-        </a>
+    <!-- Poki Theater Mode Overlay Container -->
+    <div id="gameTheater" class="theater">
+        <div class="theater-header">
+            <h2 id="currentGameTitle">Playing</h2>
+            <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
+        </div>
+        <div class="stage">
+            <iframe id="gameIframe" src=""></iframe>
+            <div class="sidebar-ad">Vertical Ad Banner Space</div>
+        </div>
     </div>
+
+    <!-- The Automatic Automation Engine -->
+    <script>
+        // Connecting to a clean, safe public arcade data library index
+        const gameLibraryUrl = 'https://githubusercontent.com';
+
+        async function fetchArcadeCatalog() {
+            try {
+                const response = await fetch(gameLibraryUrl);
+                const games = await response.json();
+                
+                const grid = document.getElementById('arcadeGrid');
+                document.getElementById('gameCount').innerText = `${games.length} Games Online`;
+
+                // Loop through all games in the catalog array and render them instantly
+                games.forEach(game => {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.style.backgroundImage = `url('${game.thumbnail || 'https://unsplash.com'}')`;
+                    tile.onclick = () => launchTheater(game.url, game.title);
+                    
+                    const label = document.createElement('span');
+                    label.innerText = game.title;
+                    
+                    tile.appendChild(label);
+                    grid.appendChild(tile);
+                });
+            } catch (error) {
+                console.error('Error fetching the arcade library:', error);
+                document.getElementById('gameCount').innerText = 'Offline Mode';
+            }
+        }
+
+        function launchTheater(url, title) {
+            document.getElementById('gameIframe').src = url;
+            document.getElementById('currentGameTitle').innerText = title;
+            document.getElementById('gameTheater').style.display = 'flex';
+        }
+
+        function closeGame() {
+            document.getElementById('gameTheater').style.display = 'none';
+            document.getElementById('gameIframe').src = '';
+        }
+
+        // Run the builder script automatically when your webpage loads
+        fetchArcadeCatalog();
+    </script>
 
 </body>
 </html>
