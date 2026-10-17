@@ -53,19 +53,21 @@
             <div class="sidebar-ad">Vertical Ad Space</div>
         </div>
     </div>
+    <!-- Kept all your Poki layout styles exactly the same above -->
 
     <script>
-        // 🚀 THE UNBLOCKED HACK: The gaming feed is wrapped inside a clean developer proxy
+        // 🚀 THE NEW PROTECTION HACK: Utilizing an enterprise developer proxy shield
         const rawFeedUrl = 'https://gamedistribution.com';
-        const unblockedProxyUrl = 'https://allorigins.win' + encodeURIComponent(rawFeedUrl);
+        
+        // Swapping to corsproxy.io completely hides the target request inside standard web metadata
+        const unblockedProxyUrl = 'https://corsproxy.io' + encodeURIComponent(rawFeedUrl);
 
         async function fetchAutomatedCatalog() {
             try {
                 const response = await fetch(unblockedProxyUrl);
-                const proxyData = await response.json();
                 
-                // Parse the hidden data out of the proxy envelope
-                const games = JSON.parse(proxyData.contents);
+                // Directly parsing the structured stream array
+                const games = await response.json();
                 
                 const grid = document.getElementById('arcadeGrid');
                 document.getElementById('gameCount').innerText = `${games.length} Games Online`;
@@ -85,7 +87,7 @@
                 });
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('gameCount').innerText = 'Connection Error';
+                document.getElementById('gameCount').innerText = 'Proxy Blocked - Let us check solution';
             }
         }
 
